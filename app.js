@@ -1,86 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargo Contract Test</title>
-    <!-- Подключение библиотеки web3.js -->
-    <link rel="stylesheet" href="main.css">
+// Адрес контракта (замените на фактический адрес после развертывания)
+const contractAddress = '0x80Bf55c4aD22cB647Fc41175a570F0E8380259E4';
 
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
-</head>
-<body>
-
-    <h1>Cargo Contract Test</h1>
-    <button onclick="goToContractDetails()">Go to Contract Details</button>
-<button class="makePaymentButton" onclick="goToMakePayment()">Make Payment</button>
-
-<script>
-    function goToMakePayment() {
-        window.location.href = 'makePayment.html';
-    }
-</script>
+// Web3.js объект для взаимодействия с контрактом
+const web3 = new Web3('http://localhost:7545'); // Замените на адрес вашего локального узла Ganache
 
 
-<script>
-  function goToContractDetails() {
-    window.location.href = 'contractDetails.html';
-  }
-</script>
-<!-- Форма для ввода параметров контракта -->
-<form id="contractForm">
-    <label for="id">Contract ID:</label>
-    <input type="number" id="id" value="123" required>
-    <br>
 
-    <label for="buyer">Buyer Address:</label>
-    <input type="text" id="buyer" value="0x1234567890123456789012345678901234567890" required>
-    <br>
-
-    <label for="item">Item:</label>
-    <input type="text" id="item" value="Test Item" required>
-    <br>
-
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" value="10" required>
-    <br>
-
-    <label for="origin">Origin:</label>
-    <input type="text" id="origin" value="Test Origin" required>
-    <br>
-
-    <label for="destination">Destination:</label>
-    <input type="text" id="destination" value="Test Destination" required>
-    <br>
-
-    <label for="deliveryDate">Expected Delivery Date:</label>
-    <input type="date" id="deliveryDate" value="2023-12-31" required>
-    <br>
-
-    <label for="paymentAmount">Payment Amount:</label>
-    <input type="number" id="paymentAmount" value="100" required>
-    <br>
-
-    <label for="paymentDueDate">Payment Due Date:</label>
-    <input type="date" id="paymentDueDate" value="2023-12-01" required>
-    <br>
-
-    <button type="button" onclick="createContract()">Create Contract</button>
-</form>
-
-    <script>
-        // Адрес контракта (замените на фактический адрес после развертывания)
-        const contractAddress = '0x4f4fe9561d081989983e06209a892abaebff7bbb';
-        
-        // Web3.js объект для взаимодействия с контрактом
-        const web3 = new Web3('http://localhost:7545'); // Замените на адрес вашего локального узла Ganache
-
-        // Адрес аккаунта (замените на фактический адрес после развертывания)
-        const accountAddress = '0x352ad670Fc5eE4CbCBf3d39e417E46b7FCa1E5a1';
-
-        // Аби вашего контракта (замените на фактическое ABI)
-        const contractAbi = [
-        
+// Аби вашего контракта (замените на фактическое ABI)
+const contractAbi = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -474,47 +401,126 @@
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
+];
 
-        ];
+// Создание объекта контракта
+const cargoContract = new web3.eth.Contract(contractAbi, contractAddress);
 
-        // Создание объекта контракта
-        const cargoContract = new web3.eth.Contract(contractAbi, contractAddress);
-        console.log("Cargo Contract:", cargoContract);
+// Функция для создания контракта
+function createContract() {
+  const id = document.getElementById('id').value;
+  const buyer = document.getElementById('buyer').value;
+  const item = document.getElementById('item').value;
+  const quantity = document.getElementById('quantity').value;
+  const origin = document.getElementById('origin').value;
+  const destination = document.getElementById('destination').value;
+  const deliveryDate = new Date(document.getElementById('deliveryDate').value).getTime();
+  const paymentAmount = document.getElementById('paymentAmount').value;
+  const paymentDueDate = new Date(document.getElementById('paymentDueDate').value).getTime();
 
-        function createContract() {
-    const id = document.getElementById('id').value;
-    const buyer = document.getElementById('buyer').value;
-    const item = document.getElementById('item').value;
-    const quantity = document.getElementById('quantity').value;
-    const origin = document.getElementById('origin').value;
-    const destination = document.getElementById('destination').value;
-    const deliveryDate = new Date(document.getElementById('deliveryDate').value).getTime();
-    const paymentAmount = document.getElementById('paymentAmount').value;
-    const paymentDueDate = new Date(document.getElementById('paymentDueDate').value).getTime();
-
-    // Отправка транзакции создания контракта
-    cargoContract.methods.createContract({
-        id,
-        buyer,
-        item,
-        quantity,
-        origin,
-        destination,
-        expectedDeliveryDate: deliveryDate,
-        paymentAmount,
-        paymentDueDate,
-    }).send({ from: accountAddress })
-    .then(function(receipt){
-        console.log('Transaction Receipt:', receipt);
-        alert('Contract created successfully!');
+  // Отправка транзакции создания контракта
+  cargoContract.methods.createContract({
+    id,
+    buyer,
+    item,
+    quantity,
+    origin,
+    destination,
+    expectedDeliveryDate: deliveryDate,
+    paymentAmount,
+    paymentDueDate,
+  }).send({ from: accountAddress })
+    .on('transactionHash', function (hash) {
+      console.log('Transaction Hash:', hash);
     })
-    .catch(function(error) {
-        console.error('Error:', error);
-        alert('Error creating contract!');
+    .on('receipt', function (receipt) {
+      console.log('Transaction Receipt:', receipt);
+      alert('Contract created successfully!');
+    })
+    .on('error', function (error) {
+      console.error('Error:', error);
+      alert('Error creating contract!');
     });
 }
+  
+  // Функция для отображения деталей контракта на странице
+function displayContractDetails(contractDetails) {
+    const container = document.querySelector('.container');
+    const idElement = document.createElement('p');
+    idElement.textContent = 'Contract ID: ' + contractDetails.id;
+  
+    const shipperElement = document.createElement('p');
+    shipperElement.textContent = 'Shipper Address: ' + contractDetails.shipper;
+  
+    const buyerElement = document.createElement('p');
+    buyerElement.textContent = 'Buyer Address: ' + contractDetails.buyer;
+  
+    container.innerHTML = '';
+  
+    container.appendChild(idElement);
+    container.appendChild(shipperElement);
+    container.appendChild(buyerElement);
+  
+}
 
-    </script>
 
-</body>
-</html>
+// Function to display contract details on the page
+function displayContractDetails(contractDetails) {
+    const container = document.querySelector('.container');
+  
+    // Create elements for displaying payment details
+    const paymentElement = document.createElement('p');
+    paymentElement.textContent = 'Payment Amount: ' + contractDetails.paymentAmount;
+  
+    // Clear the container before adding new data
+    container.innerHTML = '';
+  
+    // Add payment element to the container
+    container.appendChild(paymentElement);
+  
+
+  }
+  
+// Function to get contract details by ID
+async function getContractDetails(contractId) {
+    try {
+      const contractDetails = await cargoContract.methods.getContractDetails(contractId).call();
+      displayContractDetails(contractDetails);
+    } catch (error) {
+      console.error('Error getting contract details:', error);
+      // Handle error (e.g., display an error message to the user)
+    }
+  }
+  
+
+
+
+
+// Функция для выполнения оплаты
+function makePayment() {
+    const amount = document.getElementById('amount').value;
+
+    // Вызов функции makePayment из вашего контракта
+    cargoContract.methods.makePayment(contractId).send({ from: accountAddress, value: web3.utils.toWei(amount, 'ether') })
+        .on('transactionHash', function(hash){
+            console.log('Transaction Hash:', hash);
+        })
+        .on('receipt', function(receipt){
+            console.log('Transaction Receipt:', receipt);
+            alert('Payment successful!');
+        })
+        .on('error', function(error) {
+            console.error('Error:', error);
+            alert('Error making payment!');
+        });
+}
+
+// Функция для возврата назад
+function goBack() {
+    window.history.back();
+}
+
+// Вызов функции getContractDetails при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Можно добавить дополнительные действия по необходимости
+});

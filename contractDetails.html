@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Details</title>
+    <link rel="stylesheet" href="contractDetails.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Contract Details</h1>
+        <div>
+            <label for="contractId">Contract ID:</label>
+            <span id="contractIdValue"></span>
+        </div>
+        <div>
+            <label for="shipper">Shipper Address:</label>
+            <span id="shipperValue"></span>
+        </div>
+        <div>
+            <label for="buyer">Buyer Address:</label>
+            <span id="buyerValue"></span>
+        </div>
+    </div>
+
+    <button onclick="goBack()">Go Back</button>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Просим пользователя ввести идентификатор контракта
+            const contractId = prompt('Enter the Contract ID:');
+            
+            // Вызываем функцию для получения деталей контракта
+            getContractDetails(contractId);
+        });
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>

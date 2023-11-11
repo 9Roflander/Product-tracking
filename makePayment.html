@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment</title>
+    <link rel="stylesheet" href="makePayment.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Make Payment</h1>
+        <label for="contractId">Contract ID:</label>
+        <input type="text" id="contractId" required>
+        <br>
+        <label for="amount">Payment Amount:</label>
+        <input type="number" id="amount" required>
+        <br>
+        <button onclick="makePayment()">Make Payment</button>
+    </div>
+
+    <button class="goBack" onclick="goBack()">Go Back</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+
+        // Функция для выполнения оплаты
+// Функция для выполнения оплаты
+function makePayment() {
+    const contractId = document.getElementById('contractId').value;
+    const amount = document.getElementById('amount').value;
+
+    // Замените эту строку, чтобы получить актуальный адрес аккаунта
+    const accountAddress = document.getElementById('contractId').value;
+
+    // Вызов функции makePayment из вашего контракта
+    cargoContract.methods.makePayment(contractId).send({ from: accountAddress, value: web3.utils.toWei(amount, 'ether') })
+        .on('transactionHash', function(hash){
+            console.log('Transaction Hash:', hash);
+        })
+        .on('receipt', function(receipt){
+            console.log('Transaction Receipt:', receipt);
+            alert('Payment successful!');
+        })
+        .on('error', function(error) {
+            console.error('Error:', error);
+            alert('Error making payment!');
+        });
+}
+
+
+// Функция для возврата назад
+function goBack() {
+    window.history.back();
+}
+
+// Вызов функции getContractDetails при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Можно добавить дополнительные действия по необходимости
+});
+</script>
+
+</body>
+</html>
