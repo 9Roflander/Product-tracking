@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cargo Contract App</title>
+    <link rel="stylesheet" href="forms.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrapper">
+    <form action="">
+        <h1>Smart contract Details</h1> <br>
+        <div class="input-box">
+            <label for="shipperAddress">Shipper's Address:</label>
+            <input type="text" name="shipperAddress" placeholder="Shipper's Address" required>
+        </div>
+        <div class="input-box">
+            <label for="buyerAddress">Buyer's Address:</label>
+            <input type="text"  name="buyerAddress" placeholder="Buyer's Address" required>
+        </div>
+        <div class="input-box">
+            <label for="item">Item Name:</label>
+            <input type="text"  name="item" placeholder="Item Name" required>
+        </div>
+        <div class="input-box">
+            <label for="quantity">Quantity:</label>
+            <input type="number" name="quantity" placeholder="Quantity" required>
+        </div>
+        <div class="input-box">
+            <label for="origin">Origin:</label>
+            <input type="text" name="origin" placeholder="Origin" required>
+        </div>
+        <div class="input-box">
+            <label for="destination">Destination:</label>
+            <input type="text" name="destination" placeholder="Destination" required>
+        </div>
+        <div class="input-box">
+            <label for="paymentAmount">Payment Amount (ETH):</label>
+            <input type="number"  name="paymentAmount" step="0.01" placeholder="Payment Amount" required>
+        </div><br>
+        <div class="input-box">
+            <label for="paymentDueDate">Payment Due Date:</label>
+            <input type="date"  name="paymentDueDate" required>
+        </div><br>
+        <div class="input-box">
+            <label for="deliveryDate">Expected Delivery Date:</label> <br>
+            <input type="date"  name="DeliveryDate" required>
+        </div><br><br>
+        <div class="input-box">
+            <label for="status">Current Status:</label>
+            <select id="status" name="status" required>
+                <option value="Created">Created</option>
+            </select>
+        </div>
+        <div class="input-box">
+            <label for="isDelivered">Cargo Delivered:</label>
+            <input type="checkbox" id="isDelivered" name="isDelivered">
+        </div>
+        <div class="input-box">
+            <label for="isPaid">Payment Made:</label>
+            <input type="checkbox" id="isPaid" name="isPaid">
+        </div>
+        <br>
+        <button type="submit" class="btn">Create Contract</button>
+    </form>
+</div>
+</body>
+</html>
